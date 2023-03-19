@@ -5,9 +5,8 @@ import styles from '@/styles/Home.module.css'
 import AppLayout from './componets/AppLayout'
 import Button from './componets/Button'
 import GitHubIcon from './componets/GitHubIcon'
-import {loginWithGitHub}   from './firebase/client'
-import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithPopup, GithubAuthProvider } from "firebase/auth"
+import loginWithGitHub   from './firebase/client'
+import { GithubAuthProvider } from "firebase/auth"
 import { useState } from 'react'
 
 
@@ -16,48 +15,13 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const [user, setUser] = useState(null)
+
   const handleClick = () => {
-    
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_7I3J5yvdk9Xilae3I9AVOV9s-pG8Fkg",
-        authDomain: "devtter-f1bf5.firebaseapp.com",
-        projectId: "devtter-f1bf5",
-        storageBucket: "devtter-f1bf5.appspot.com",
-        messagingSenderId: "20874292799",
-        appId: "1:20874292799:web:6e1413341cb614f7ba128a",
-        measurementId: "G-Z5WN7D70CC"
-      };
-    
-      // Initialize Firebase V9
-    const app = initializeApp(firebaseConfig);
-    
-    
-    // Initialize Firebase Authentication and get a reference to the service
-    const auth = getAuth();
-    
-    //Crea una instancia del objeto del proveedor de GitHub:
-    const provider = new GithubAuthProvider();
-    
-      
-        signInWithPopup(auth, provider).then((result) => {
-        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-      
-        // The signed-in user info.
-        //const user = result.user;
-        console.log(result);
-        const avatar = result.user.photoURL;
-        const userName = result.user.providerData[0].displayName;
-        const email = result.user.email;
-        const user = {userName, email , avatar};
-        // console.log(user);
+      loginWithGitHub().then((user)=>{
+        const { userName, email, avatar } = user
         setUser(user)
-        console.log(user);
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-        }).catch((error) => {
+        console.log(user)
+      }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -66,10 +30,12 @@ export default function Home() {
         // The AuthCredential type that was used.
         const credential = GithubAuthProvider.credentialFromError(error);
         // ...
-        });
-         
-
+      })
+           
   }
+
+
+  
   return (
     <>
       <Head>

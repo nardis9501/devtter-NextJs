@@ -1,4 +1,3 @@
-// import firebase from "firebase/compat/app"
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GithubAuthProvider } from "firebase/auth"
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -21,28 +20,27 @@ const auth = getAuth();
 
 //Crea una instancia del objeto del proveedor de GitHub:
 const provider = new GithubAuthProvider();
+const loginWithGithub = () => {
 
-export const loginWithGithub = () => {
   return signInWithPopup(auth, provider).then((result) => {
     // This gives you a GitHub Access Token. You can use it to access the GitHub API.
     const credential = GithubAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
 
     // The signed-in user info.
-    const user = result.user;
+    const {user} = result;
+    console.log(user);
+    const {photoURL, providerData, email} = user;
+    const {displayName} = providerData[0];
+    
+     return {
+        userName: displayName,
+        email: email,
+        avatar: photoURL
+       };
     // IdP data available using getAdditionalUserInfo(result)
     // ...
-    }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GithubAuthProvider.credentialFromError(error);
-    // ...
-    });
-
-
-    
+  });
 }
+
+export default loginWithGithub
