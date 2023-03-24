@@ -5,9 +5,10 @@ import styles from '@/styles/Home.module.css'
 import AppLayout from './componets/AppLayout'
 import Button from './componets/Button'
 import GitHubIcon from './componets/GitHubIcon'
-import loginWithGitHub   from './firebase/client'
+import loginWithGitHub, { onAuthStateChangedToUser }   from './firebase/client'
 import { GithubAuthProvider } from "firebase/auth"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -15,12 +16,18 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const [user, setUser] = useState(null)
+  useEffect(() => {
+    onAuthStateChangedToUser(user => {
+      setUser(user)})
+      console.log(user)
+    }, 
+  []) 
 
   const handleClick = () => {
       loginWithGitHub().then((user)=>{
         const { userName, email, avatar } = user
         setUser(user)
-        console.log(user)
+        //console.log(user)
       }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -58,10 +65,19 @@ export default function Home() {
           
         </section>
 
+        {
+          user === null &&
         <Button onClick={handleClick}>
         <GitHubIcon fill='#fff' width={24} height={24} /> 
           Login with GitHub</Button>
-
+        }
+        {
+          user &&
+          <div>
+            Welcome
+            <img src={user.avatar}/>
+          </div>
+        }
         
         
         {/* This is a description and the footer */}
@@ -82,7 +98,7 @@ export default function Home() {
                 alt="NarYuri Logo"
                 className={styles.vercelLogo}
                 width={100}
-                height={80}
+                height={90}
                 priority
               />
             </a>

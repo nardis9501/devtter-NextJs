@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GithubAuthProvider } from "firebase/auth"
+import { onAuthStateChanged } from "firebase/auth";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyD_7I3J5yvdk9Xilae3I9AVOV9s-pG8Fkg",
@@ -18,6 +19,37 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth();
 
+// Handle user state changed
+export const onAuthStateChangedToUser = (onChance) =>{
+
+  return onAuthStateChanged(auth, (user) => {
+     
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const mapUser = () => {
+        // const {user} = auth.currentUser;
+
+        const {photoURL, providerData, email} = user;
+        const {displayName} = providerData[0];
+        const uid = user.uid;
+    
+        return {
+            userName: displayName,
+            email,
+            avatar: photoURL
+          };
+      }
+      
+      // ...
+      onChance(mapUser)
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+}
+
 //Crea una instancia del objeto del proveedor de GitHub:
 const provider = new GithubAuthProvider();
 const loginWithGithub = () => {
@@ -29,13 +61,13 @@ const loginWithGithub = () => {
 
     // The signed-in user info.
     const {user} = result;
-    console.log(user);
+    // console.log(user);
     const {photoURL, providerData, email} = user;
     const {displayName} = providerData[0];
     
      return {
         userName: displayName,
-        email: email,
+        email,
         avatar: photoURL
        };
     // IdP data available using getAdditionalUserInfo(result)
