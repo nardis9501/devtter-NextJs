@@ -1,48 +1,49 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import AppLayout from './componets/AppLayout'
-import Button from './componets/Button'
-import GitHubIcon from './componets/GitHubIcon'
-import loginWithGitHub, { onAuthStateChangedToUser }   from './firebase/client'
+import Head from "next/head"
+import Image from "next/image"
+// import { Inter } from "next/font/google"
+import styles from "@/styles/Home.module.css"
+import AppLayout from "./components/AppLayout"
+import Button from "./components/Button"
+import GitHubIcon from "./components/Icons/GitHubIcon"
+import loginWithGitHub, { onAuthStateChangedToUser } from "./firebase/client"
 import { GithubAuthProvider } from "firebase/auth"
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
+import Avatar from "./components/Avatar"
+import Logo from "./components/Icons/Logo"
+import Link from "next/link"
 
-
-
-const inter = Inter({ subsets: ['latin'] })
+/* exported inter */
+// const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
-
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(undefined)
   useEffect(() => {
-    onAuthStateChangedToUser(user => {
-      setUser(user)})
-      console.log(user)
-    }, 
-  []) 
+    onAuthStateChangedToUser((user) => {
+      setUser(user)
+    })
+    console.log(user)
+  }, [])
 
   const handleClick = () => {
-      loginWithGitHub().then((user)=>{
-        const { userName, email, avatar } = user
+    loginWithGitHub()
+      .then((user) => {
+        // const { userName, email, avatar } = user
         setUser(user)
-        //console.log(user)
-      }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GithubAuthProvider.credentialFromError(error);
-        // ...
+        console.log(user)
       })
-           
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code
+        const errorMessage = error.message
+        // The email of the user's account used.
+        const email = error.customData.email
+        // The AuthCredential type that was used.
+        const credential = GithubAuthProvider.credentialFromError(error)
+        // ...
+        return { errorCode, errorMessage, email, credential }
+      })
   }
 
-
-  
   return (
     <>
       <Head>
@@ -53,37 +54,38 @@ export default function Home() {
       </Head>
 
       <AppLayout>
-
         <section>
-         <img src="/devter-logo.png" alt="Logo" />
-          
+          <Logo width="100px" alt="Logo" />
+
           <h1>Devtter</h1>
-          
+
           <h2>
-            Talk about development <br/>with developers 👦👧
+            Talk about development <br />
+            with developers 👦👧
           </h2>
-          
         </section>
 
-        {
-          user === null &&
-        <Button onClick={handleClick}>
-        <GitHubIcon fill='#fff' width={24} height={24} /> 
-          Login with GitHub</Button>
-        }
-        {
-          user &&
+        {user === null && (
+          <Button onClick={handleClick}>
+            <GitHubIcon fill="#fff" width={24} height={24} />
+            Login with GitHub
+          </Button>
+        )}
+        {user && (
           <div>
-            Welcome
-            <img src={user.avatar}/>
+            <Avatar
+              src={user.avatar}
+              alt={"GitHub user avatar"}
+              text={user.userName}
+            />
           </div>
-        }
-        
-        
+        )}
+
+        <Link href="/home">hola</Link>
         {/* This is a description and the footer */}
         <div className={styles.description}>
           <p>
-          👦👧 Talk about development with &nbsp;
+            👦👧 Talk about development with &nbsp;
             <code className={styles.code}>developers</code>
           </p>
           <div>
@@ -92,7 +94,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
+              By{" "}
               <Image
                 src="/naryuri_icon.jpg"
                 alt="NarYuri Logo"
@@ -105,12 +107,7 @@ export default function Home() {
           </div>
         </div>
       </AppLayout>
-      <main className={styles.main}>
-
-       
-
-        
-      </main>
+      <main className={styles.main}> </main>
     </>
   )
 }
