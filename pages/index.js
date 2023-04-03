@@ -8,40 +8,38 @@ import GitHubIcon from "./components/Icons/GitHubIcon"
 import loginWithGitHub, { onAuthStateChangedToUser } from "./firebase/client"
 import { GithubAuthProvider } from "firebase/auth"
 import { useEffect, useState } from "react"
-import Avatar from "./components/Avatar"
 import Logo from "./components/Icons/Logo"
-import Link from "next/link"
+import { useRouter } from "next/router"
 
 /* exported inter */
 // const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
   const [user, setUser] = useState(undefined)
+  const router = useRouter()
+
   useEffect(() => {
     onAuthStateChangedToUser((user) => {
       setUser(user)
     })
-    console.log(user)
   }, [])
 
+  useEffect(() => {
+    user && router.replace("/home")
+  }, [user])
+
   const handleClick = () => {
-    loginWithGitHub()
-      .then((user) => {
-        // const { userName, email, avatar } = user
-        setUser(user)
-        console.log(user)
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code
-        const errorMessage = error.message
-        // The email of the user's account used.
-        const email = error.customData.email
-        // The AuthCredential type that was used.
-        const credential = GithubAuthProvider.credentialFromError(error)
-        // ...
-        return { errorCode, errorMessage, email, credential }
-      })
+    loginWithGitHub().catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code
+      const errorMessage = error.message
+      // The email of the user's account used.
+      const email = error.customData.email
+      // The AuthCredential type that was used.
+      const credential = GithubAuthProvider.credentialFromError(error)
+      // ...
+      return { errorCode, errorMessage, email, credential }
+    })
   }
 
   return (
@@ -71,17 +69,9 @@ export default function Home() {
             Login with GitHub
           </Button>
         )}
-        {user && (
-          <div>
-            <Avatar
-              src={user.avatar}
-              alt={"GitHub user avatar"}
-              text={user.userName}
-            />
-          </div>
-        )}
 
-        <Link href="/home">hola</Link>
+        {user === undefined && <img src="/spinner.gif" />}
+
         {/* This is a description and the footer */}
         <div className={styles.description}>
           <p>

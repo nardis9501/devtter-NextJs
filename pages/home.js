@@ -16,6 +16,14 @@ export default function HomePage() {
       <AppLayout>
         <header>
           <h2>Inicio</h2>
+
+          {/* <div>
+            <Avatar
+              src={user.avatar}
+              alt={"GitHub user avatar"}
+              text={user.userName}
+            />
+          </div> */}
         </header>
         <section>
           {timeline.map(({ id, username, avatar, message }) => (
@@ -32,44 +40,46 @@ export default function HomePage() {
       </AppLayout>
       <style jsx>{`
         header {
-          border-bottom: 2px solid #ccc;
+          border-bottom: 1px solid #ccc;
+          background-color: #e3e3e3aa;
+          backdrop-filter: blur(5px);
           position: fixed;
           align-items: center;
           display: flex;
           height: 49px;
           top: 0;
-          margin: 0 auto;
-          width: 64%;
+          width: 725px;
         }
-
         h2 {
           color: black;
           font-size: 21px;
         }
 
         section {
-          //border-top: 2px solid #ccc;
-          position: relative;
-          align-items: space-between;
-          display: grid;
-          height: 100%;
-          // bottom: 0;
            {
-            /* margin: 0 auto; */
+            /* padding: 49px 0 49px 0; */
           }
-          width: 100vh;
-          padding: 0 0 0 10px;
         }
 
         nav {
-          border-top: 2px solid #ccc;
+          border-top: 1px solid #ccc;
+          background-color: #e3e3e3aa;
+          backdrop-filter: blur(5px);
           position: fixed;
           align-items: center;
           display: flex;
           height: 49px;
           bottom: 0;
           margin: 0 auto;
-          width: 64%;
+          width: 725px;
+        }
+        @media (max-width: 725px) {
+          header {
+            width: 66%;
+          }
+          nav {
+            width: 66%;
+          }
         }
       `}</style>
     </>

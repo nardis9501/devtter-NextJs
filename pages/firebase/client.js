@@ -29,13 +29,11 @@ export const onAuthStateChangedToUser = (onChance) => {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const mapUser = () => {
-        // const {user} = auth.currentUser;
+        // const { accessToken } = auth.currentUser
 
         const { photoURL, providerData, email, uid, accessToken } = user
         const { displayName } = providerData[0]
-        // const uid = user.uid
 
-        // console.log(user)
         return {
           userName: displayName,
           email,
@@ -58,26 +56,7 @@ export const onAuthStateChangedToUser = (onChance) => {
 // Crea una instancia del objeto del proveedor de GitHub:
 const provider = new GithubAuthProvider()
 const loginWithGithub = () => {
-  return signInWithPopup(auth, provider).then((result) => {
-    // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-    const credential = GithubAuthProvider.credentialFromResult(result)
-    const token = credential.accessToken
-
-    // The signed-in user info.
-    const { user } = result
-    // console.log(user);
-    const { photoURL, providerData, email } = user
-    const { displayName } = providerData[0]
-
-    return {
-      userName: displayName,
-      email,
-      avatar: photoURL,
-      token,
-    }
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  })
+  return signInWithPopup(auth, provider)
 }
 
 export default loginWithGithub

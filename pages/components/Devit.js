@@ -14,16 +14,25 @@ export default function Devit({ avatar, username, message, id }) {
       </article>
       <style jsx>{`
         article {
-          border-bottom: 2px solid #eaf7ff;
+          border-bottom: 1px solid #ccc;
           display: flex;
-          padding: 10px 15px;
+          padding: 5px;
+          width: 133%;
+          
+        }
+        section {
+          display: block;
+          
+  }
+          padding: 1px;
         }
         div {
-          padding-right: 10px;
         }
         p {
           line-height: 1.3125;
-          margin: 0;
+           {
+            /* margin: 0; */
+          }
         }
       `}</style>
     </>
