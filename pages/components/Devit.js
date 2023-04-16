@@ -1,15 +1,20 @@
 import Avatar from "./Avatar"
 
-export default function Devit({ avatar, username, message, id }) {
+export default function Devit({ avatar, userName, createdAt, content, id }) {
   return (
     <>
       <article>
         <div>
-          <Avatar alt={username} src={avatar} />
+          <Avatar alt={userName} src={avatar} />
         </div>
         <section>
-          <strong>{username}</strong>
-          <p>{message}</p>
+          <strong>{userName}</strong>
+
+          <span> · </span>
+
+          <span>{createdAt}</span>
+
+          <p>{content}</p>
         </section>
       </article>
       <style jsx>{`
@@ -17,22 +22,23 @@ export default function Devit({ avatar, username, message, id }) {
           border-bottom: 1px solid #ccc;
           display: flex;
           padding: 5px;
-          width: 133%;
-          
+          width: 100%;
         }
         section {
-          display: block;
-          
-  }
-          padding: 1px;
         }
+
         div {
+          padding: 1px;
         }
         p {
           line-height: 1.3125;
-           {
-            /* margin: 0; */
-          }
+          margin: 0;
+        }
+
+        span {
+          margin: 0 5px;
+          color: #555;
+          font-size: 14px;
         }
       `}</style>
     </>

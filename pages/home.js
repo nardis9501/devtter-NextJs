@@ -1,38 +1,33 @@
 import AppLayout from "./components/AppLayout"
 import Devit from "./components/Devit"
-// import styles from "../styles/HomePage.module.css"
 import { useEffect, useState } from "react"
-// import Avatar from "./components/Avatar"
+import useUser from "./hooks/useUser"
+import { fechtLatestDevits } from "./firebase/client"
+
 export default function HomePage() {
   const [timeline, setTimeline] = useState([])
 
+  const user = useUser()
+
   useEffect(() => {
-    fetch("http://localhost:3000/api/statuses/home-timeline")
-      .then((res) => res.json())
-      .then(setTimeline)
-  }, [])
+    user && fechtLatestDevits().then(setTimeline)
+  }, [user])
   return (
     <>
       <AppLayout>
         <header>
           <h2>Inicio</h2>
-
-          {/* <div>
-            <Avatar
-              src={user.avatar}
-              alt={"GitHub user avatar"}
-              text={user.userName}
-            />
-          </div> */}
         </header>
+
         <section>
-          {timeline.map(({ id, username, avatar, message }) => (
+          {timeline.map(({ id, userName, createdAt, avatar, content }) => (
             <Devit
               avatar={avatar}
               id={id}
               key={id}
-              message={message}
-              username={username}
+              content={content}
+              userName={userName}
+              createdAt={createdAt}
             />
           ))}
         </section>
@@ -56,6 +51,7 @@ export default function HomePage() {
         }
 
         section {
+          width: 100%;
            {
             /* padding: 49px 0 49px 0; */
           }

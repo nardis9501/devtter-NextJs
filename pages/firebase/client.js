@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app"
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore"
+
 import {
   getAuth,
   signInWithPopup,
@@ -19,8 +21,11 @@ const firebaseConfig = {
 // Initialize Firebase V9
 const app = initializeApp(firebaseConfig)
 
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app)
+
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app)
+const auth = getAuth()
 
 // Handle user state changed
 export const onAuthStateChangedToUser = (onChance) => {
@@ -38,7 +43,7 @@ export const onAuthStateChangedToUser = (onChance) => {
           userName: displayName,
           email,
           avatar: photoURL,
-          userID: uid,
+          userId: uid,
           token: accessToken,
         }
       }
@@ -59,4 +64,37 @@ const loginWithGithub = () => {
   return signInWithPopup(auth, provider)
 }
 
+// Save tweet (devit) in firebase
+export const addDevit = async ({ avatar, userId, content, userName }) => {
+  try {
+    const docRef = await addDoc(collection(db, "devits"), {
+      avatar,
+      content,
+      userId,
+      userName,
+      createdAt: new Date(),
+      likesCount: 0,
+      sharedCount: 0,
+    })
+    console.log("Document written with ID: ", docRef.id)
+  } catch (err) {
+    console.error("Error adding document: ", err)
+  }
+}
+
+export const fechtLatestDevits = () => {
+  return getDocs(collection(db, "devits")).then((snapshot) => {
+    return snapshot.docs.map((doc) => {
+      const data = doc.data()
+      const id = doc.id
+      const { createdAt } = data
+      const normalizadCreatedAd = new Date(createdAt.seconds * 1000).toString()
+      return {
+        ...data,
+        id,
+        createdAt: normalizadCreatedAd,
+      }
+    })
+  })
+}
 export default loginWithGithub

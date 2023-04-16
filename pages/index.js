@@ -5,24 +5,19 @@ import styles from "@/styles/Home.module.css"
 import AppLayout from "./components/AppLayout"
 import Button from "./components/Button"
 import GitHubIcon from "./components/Icons/GitHubIcon"
-import loginWithGitHub, { onAuthStateChangedToUser } from "./firebase/client"
+import loginWithGitHub from "./firebase/client"
 import { GithubAuthProvider } from "firebase/auth"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Logo from "./components/Icons/Logo"
 import { useRouter } from "next/router"
+import useUser from "./hooks/useUser"
 
 /* exported inter */
 // const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
-  const [user, setUser] = useState(undefined)
+  const user = useUser()
   const router = useRouter()
-
-  useEffect(() => {
-    onAuthStateChangedToUser((user) => {
-      setUser(user)
-    })
-  }, [])
 
   useEffect(() => {
     user && router.replace("/home")
