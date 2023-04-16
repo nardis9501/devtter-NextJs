@@ -1,5 +1,5 @@
-import AppLayout from "./components/AppLayout"
-import Devit from "./components/Devit"
+import AppLayout from "../components/AppLayout"
+import Devit from "../components/Devit"
 import { useEffect, useState } from "react"
 import useUser from "./hooks/useUser"
 import { fechtLatestDevits } from "./firebase/client"
