@@ -1,5 +1,12 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore"
+import {
+  orderBy,
+  query,
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore"
 
 import {
   getAuth,
@@ -82,19 +89,26 @@ export const addDevit = async ({ avatar, userId, content, userName }) => {
   }
 }
 
-export const fechtLatestDevits = () => {
-  return getDocs(collection(db, "devits")).then((snapshot) => {
-    return snapshot.docs.map((doc) => {
-      const data = doc.data()
-      const id = doc.id
-      const { createdAt } = data
-      const normalizadCreatedAd = new Date(createdAt.seconds * 1000).toString()
-      return {
-        ...data,
-        id,
-        createdAt: normalizadCreatedAd,
-      }
-    })
-  })
+export const fechtLatestDevits = async () => {
+  // const database = getDocs(collection(db, "devits"))
+  // console.log(database)
+
+  return (
+    getDocs(query(collection(db, "devits"), orderBy("createdAt", "desc")))
+      // .orderBy("createdAt")
+      .then(({ docs }) => {
+        return docs.map((doc) => {
+          const data = doc.data()
+          const id = doc.id
+          const { createdAt } = data
+
+          return {
+            ...data,
+            id,
+            createdAt: +createdAt.toDate(),
+          }
+        })
+      })
+  )
 }
 export default loginWithGithub

@@ -2,7 +2,9 @@ import AppLayout from "../components/AppLayout"
 import Devit from "../components/Devit"
 import { useEffect, useState } from "react"
 import useUser from "./hooks/useUser"
-import { fechtLatestDevits } from "./firebase/client"
+import { fechtLatestDevits } from "../firebase/client"
+import Link from "next/link"
+import Create from "@/components/Icons/Create"
 
 export default function HomePage() {
   const [timeline, setTimeline] = useState([])
@@ -31,7 +33,11 @@ export default function HomePage() {
             />
           ))}
         </section>
-        <nav></nav>
+        <nav>
+          <Link href={"/compose/tweet"}>
+            <Create stroke="black" />
+          </Link>
+        </nav>
       </AppLayout>
       <style jsx>{`
         header {
@@ -76,6 +82,10 @@ export default function HomePage() {
           nav {
             width: 66%;
           }
+        }
+
+        Link {
+          color: black;
         }
       `}</style>
     </>

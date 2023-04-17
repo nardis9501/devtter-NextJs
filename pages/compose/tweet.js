@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Button from "../../components/Button"
 import useUser from "../hooks/useUser"
-import { addDevit } from "../firebase/client"
+import { addDevit } from "../../firebase/client"
 import { useRouter } from "next/router"
 
 const COMPOSE_STATES = {
