@@ -101,6 +101,7 @@ export const fechtLatestDevits = async () => {
           const data = doc.data()
           const id = doc.id
           const { createdAt } = data
+          console.log("creaeredAt = timestamp: ", createdAt)
 
           return {
             ...data,
