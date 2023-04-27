@@ -1,5 +1,7 @@
+import { useCallback, useEffect, useState } from "react"
+
 const DATE_UNITS = [
-  ["month", 2592000],
+  // ["month", 2592000],
   ["week", 604800],
   ["day", 86400],
   ["hour", 3600],
@@ -10,6 +12,7 @@ const DATE_UNITS = [
 const getDateDiffs = (timestamp) => {
   const dateNow = Date.now()
   const elapsedTime = (dateNow - timestamp) / 1000
+
   // eslint-disable-next-line no-unreachable-loop
   for (const [unit, secondInUnit] of DATE_UNITS) {
     if (elapsedTime >= secondInUnit) {
@@ -23,11 +26,24 @@ const getDateDiffs = (timestamp) => {
   }
 }
 
-export default function useTimeago(timestamp) {
-  const { value, unit } = getDateDiffs(timestamp)
+export default function useTimeAgo(timestamp) {
+  const [timeAgo, setTimeAgo] = useState(() => getDateDiffs(timestamp))
+
+  const memoizedCallback = useCallback(() => {
+    const newTimeAgo = getDateDiffs(timestamp)
+    setTimeAgo(newTimeAgo)
+  }, [timestamp])
+
+  useEffect(() => {
+    const interval = setInterval(memoizedCallback, 60000) // Updates every # (60000 = 1 minute)
+
+    return () => clearInterval(interval)
+  }, [timestamp])
+
+  const { value, unit } = timeAgo
   const language = navigator.language
 
-  if (value < -1 && unit === "month") {
+  if (value < -1 && unit === DATE_UNITS[0][0]) {
     const time = new Intl.DateTimeFormat(language).format(timestamp)
     return time
   } else {

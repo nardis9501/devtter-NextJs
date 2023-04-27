@@ -6,7 +6,7 @@ export default function AppLayout({ children }) {
       <style jsx>{`
         main {
           background-color: #e1e2e2;
-          border: solid 1px #ccc;
+
           margin: 0 auto;
           display: flex;
           flex-direction: column;
@@ -17,6 +17,11 @@ export default function AppLayout({ children }) {
           max-width: 725px;
           height: 100vh;
           overflow-y: auto;
+          box-shadow: 0 0.1rem 0.5rem rgb(0, 0, 0 0.1);
+        }
+
+        main:hover {
+          box-shadow: 0 0.1rem 0.85rem rgb(0, 0, 0 0.1);
         }
 
         @media (max-width: 725px) {

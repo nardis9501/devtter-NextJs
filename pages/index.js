@@ -84,8 +84,8 @@ export default function Home() {
                 src="/naryuri_icon.jpg"
                 alt="NarYuri Logo"
                 className={styles.vercelLogo}
-                width={100}
-                height={90}
+                width={70}
+                height={70}
                 priority
               />
             </a>
