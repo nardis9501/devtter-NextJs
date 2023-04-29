@@ -19,7 +19,7 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": RULES.OFF,
     "react/prop-types": RULES.OFF,
-    "no-unused-vars": RULES.WARNING,
+    "no-unused-vars": RULES.ERROR,
     "react/no-unknown-property": [0, { ignore: 0 }],
 
     // ignoreRestSiblings: RULES.ON,

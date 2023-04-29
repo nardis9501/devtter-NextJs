@@ -9,7 +9,8 @@ export default function Devit({
   content,
   id,
 }) {
-  const timeago = useTimeago(createdAt)
+  const { timeAgo, titleTime } = useTimeago(createdAt)
+  console.log(timeAgo, titleTime)
   return (
     <>
       <article>
@@ -21,7 +22,7 @@ export default function Devit({
 
           <span> · </span>
 
-          <time>{timeago}</time>
+          <time title={titleTime}>{timeAgo}</time>
 
           <p>{content}</p>
           {img && <img src={img} />}

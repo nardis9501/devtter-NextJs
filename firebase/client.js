@@ -8,13 +8,7 @@ import {
   getDocs,
 } from "firebase/firestore"
 
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage"
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage"
 
 import {
   getAuth,
@@ -22,7 +16,6 @@ import {
   GithubAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth"
-import { useCallback } from "react"
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -82,9 +75,9 @@ const loginWithGithub = () => {
 }
 
 // Save tweet (devit) in firebase
-export const addDevit = async ({ avatar, userId, img, content, userName }) => {
+export const addDevit = ({ avatar, userId, img, content, userName }) => {
   try {
-    const docRef = await addDoc(collection(db, "devits"), {
+    const docRef = addDoc(collection(db, "devits"), {
       avatar,
       content,
       userId,
@@ -95,12 +88,13 @@ export const addDevit = async ({ avatar, userId, img, content, userName }) => {
       sharedCount: 0,
     })
     console.log("Document written with ID: ", docRef.id)
+    return docRef
   } catch (err) {
     console.error("Error adding document: ", err)
   }
 }
 
-export const fechtLatestDevits = async () => {
+export const fechtLatestDevits = () => {
   // const database = getDocs(collection(db, "devits"))
   // console.log(database)
 
@@ -123,104 +117,20 @@ export const fechtLatestDevits = async () => {
   )
 }
 
-export const storageMemoizedCallback = (file) => {
-  const storage = getStorage(app)
-  const storageRef = ref(storage, `images/${file.name}`)
-  return storageRef
-}
 export const uploadImage = (file) => {
   // Initialize Cloud Storage and get a reference to the service
-  storageMemoizedCallback(file)
+  const storage = getStorage(app)
+  const storageRef = ref(storage, `images/${file.name}`)
 
   // Create the file metadata
   /** @type {any} */
   const metadata = {
     contentType: "image/jpeg",
   }
-  const task = uploadBytesResumable(
-    storageMemoizedCallback(file),
-    file,
-    metadata
-  )
+  const task = uploadBytesResumable(storageRef, file, metadata)
   // const task = storageRef.put(file)
   console.log(task)
   return task
-}
-
-export const taskStateChanged = (task) => {
-  task.on(
-    "state_changed",
-    (snapshot) => {
-      // Observe state change events such as progress, pause, and resume
-      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      console.log("Upload is " + progress + "% done")
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused")
-          break
-        case "running":
-          console.log("Upload is running")
-          break
-      }
-    },
-    (error) => {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
-      switch (error.code) {
-        case "storage/unauthorized":
-          // User doesn't have permission to access the object
-          break
-        case "storage/canceled":
-          // User canceled the upload
-          break
-
-        // ...
-
-        case "storage/unknown":
-          // Unknown error occurred, inspect error.serverResponse
-          break
-      }
-    },
-    () => {
-      // Handle successful uploads on complete
-      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-      getDownloadURL(task.snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL)
-      })
-    }
-  )
-}
-
-// export const getStorageImgURL = (file) => {
-//   // const storage = getStorage()
-
-//   getDownloadURL(storageMemoizedCallback(file))
-//     .then((url) => {
-//       // `url` is the download URL for 'images/stars.jpg'
-
-//       console.log(url)
-//       return url
-//     })
-//     .catch((error) => {
-//       // Handle any errors
-//       console.log(error)
-//     })
-// }
-
-// Create a reference to the file to delete
-export const deleteStorageImg = (file) => {
-  const desertRef = storageMemoizedCallback(file)
-  // Delete the file
-  deleteObject(desertRef)
-    .then(() => {
-      console.log("File deleted successfully")
-      // File deleted successfully
-    })
-    .catch((error) => {
-      // Uh-oh, an error occurred!
-      console.log(error)
-    })
 }
 
 export default loginWithGithub

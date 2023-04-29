@@ -34,18 +34,26 @@ export default function useTimeAgo(timestamp) {
     setTimeAgo(newTimeAgo)
   }, [timestamp])
 
+  const { value, unit } = timeAgo
+  const language = navigator.language
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  console.log(timeZone)
+  const titleTime = new Intl.DateTimeFormat(language, {
+    dateStyle: "full",
+    timeStyle: "short",
+    timeZone: `${timeZone}`,
+  }).format(timestamp)
   useEffect(() => {
-    const interval = setInterval(memoizedCallback, 60000) // Updates every # (60000 = 1 minute)
+    const interval = setInterval(memoizedCallback, 30000) // Updates every # (60000 = 1 minute)
 
     return () => clearInterval(interval)
   }, [timestamp])
 
-  const { value, unit } = timeAgo
-  const language = navigator.language
-
   if (value < -1 && unit === DATE_UNITS[0][0]) {
-    const time = new Intl.DateTimeFormat(language).format(timestamp)
-    return time
+    const timeAgo = new Intl.DateTimeFormat(language).format(timestamp)
+
+    return { timeAgo, titleTime }
   } else {
     // relative time format ()
     const rtf = new Intl.RelativeTimeFormat(language, {
@@ -54,8 +62,7 @@ export default function useTimeAgo(timestamp) {
       style: "long",
     })
 
-    const time = rtf.format(value, unit)
-
-    return time
+    const timeAgo = rtf.format(value, unit)
+    return { timeAgo, titleTime }
   }
 }
