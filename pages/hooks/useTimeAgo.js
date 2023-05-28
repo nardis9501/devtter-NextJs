@@ -13,14 +13,30 @@ const getDateDiffs = (timestamp) => {
   const dateNow = Date.now()
   const elapsedTime = (dateNow - timestamp) / 1000
 
-  // eslint-disable-next-line no-unreachable-loop
-  for (const [unit, secondInUnit] of DATE_UNITS) {
+  // for (const [unit, secondInUnit] of DATE_UNITS) {
+  //   if (elapsedTime >= secondInUnit) {
+  //     const value = -Math.floor(elapsedTime / secondInUnit)
+
+  //     return { value, unit }
+  //   } else if (elapsedTime < 1) {
+  //     const value = 0
+  //     const unit = "second"
+
+  //     return { value, unit }
+  //   }
+  // }
+
+  for (let i = 0; i < DATE_UNITS.length; i++) {
+    const [unit, secondInUnit] = DATE_UNITS[i]
     if (elapsedTime >= secondInUnit) {
       const value = -Math.floor(elapsedTime / secondInUnit)
+
       return { value, unit }
-    } else if (elapsedTime < 1) {
+    }
+    if (elapsedTime < 1 && i === DATE_UNITS.length - 1) {
       const value = 0
       const unit = "second"
+
       return { value, unit }
     }
   }
@@ -35,10 +51,11 @@ export default function useTimeAgo(timestamp) {
   }, [timestamp])
 
   const { value, unit } = timeAgo
-  const language = navigator.language
+
+  const language = "es" // navigator.language
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  console.log(timeZone)
+
   const titleTime = new Intl.DateTimeFormat(language, {
     dateStyle: "full",
     timeStyle: "short",

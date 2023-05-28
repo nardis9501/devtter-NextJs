@@ -6,6 +6,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  limit,
 } from "firebase/firestore"
 
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage"
@@ -29,10 +30,10 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase V9
-const app = initializeApp(firebaseConfig)
+export const app = initializeApp(firebaseConfig)
 
 // Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app)
+export const db = getFirestore(app)
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth()
@@ -95,26 +96,21 @@ export const addDevit = ({ avatar, userId, img, content, userName }) => {
 }
 
 export const fechtLatestDevits = () => {
-  // const database = getDocs(collection(db, "devits"))
-  // console.log(database)
+  return getDocs(
+    query(collection(db, "devits"), orderBy("createdAt", "desc"), limit(20))
+  ).then(({ docs }) => {
+    return docs.map((doc) => {
+      const data = doc.data()
+      const id = doc.id
+      const { createdAt } = data
 
-  return (
-    getDocs(query(collection(db, "devits"), orderBy("createdAt", "desc")))
-      // .orderBy("createdAt")
-      .then(({ docs }) => {
-        return docs.map((doc) => {
-          const data = doc.data()
-          const id = doc.id
-          const { createdAt } = data
-
-          return {
-            ...data,
-            id,
-            createdAt: +createdAt.toDate(),
-          }
-        })
-      })
-  )
+      return {
+        ...data,
+        id,
+        createdAt: +createdAt.toDate(),
+      }
+    })
+  })
 }
 
 export const uploadImage = (file) => {

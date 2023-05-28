@@ -2,7 +2,6 @@ import Head from "next/head"
 import Image from "next/image"
 // import { Inter } from "next/font/google"
 import styles from "@/styles/Home.module.css"
-import AppLayout from "../components/AppLayout"
 import Button from "../components/Button"
 import GitHubIcon from "../components/Icons/GitHubIcon"
 import loginWithGitHub from "../firebase/client"
@@ -11,6 +10,7 @@ import { useEffect } from "react"
 import Logo from "../components/Icons/Logo"
 import { useRouter } from "next/router"
 import useUser from "./hooks/useUser"
+import Spinner from "@/components/Spinner"
 
 /* exported inter */
 // const inter = Inter({ subsets: ["latin"] })
@@ -46,53 +46,60 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppLayout>
-        <section>
-          <Logo width="100px" alt="Logo" />
+      <section>
+        <Logo width="100px" alt="Logo" />
 
-          <h1>Devtter</h1>
+        <h1>Devtter</h1>
 
-          <h2>
-            Talk about development <br />
-            with developers 👦👧
-          </h2>
-        </section>
+        <h2>
+          Talk about development <br />
+          with developers 👦👧
+        </h2>
+      </section>
 
-        {user === null && (
-          <Button onClick={handleClick}>
-            <GitHubIcon fill="#fff" width={24} height={24} />
-            Login with GitHub
-          </Button>
-        )}
+      {user === null && (
+        <Button onClick={handleClick}>
+          <GitHubIcon fill="#fff" width={24} height={24} />
+          Login with GitHub
+        </Button>
+      )}
 
-        {user === undefined && <img src="/spinner.gif" />}
+      {user === undefined && <Spinner />}
 
-        {/* This is a description and the footer */}
-        <div className={styles.description}>
-          <p>
-            👦👧 Talk about development with &nbsp;
-            <code className={styles.code}>developers</code>
-          </p>
-          <div>
-            <a
-              href="https://github.com/nardis9501"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{" "}
-              <Image
-                src="/naryuri_icon.jpg"
-                alt="NarYuri Logo"
-                className={styles.vercelLogo}
-                width={70}
-                height={70}
-                priority
-              />
-            </a>
-          </div>
+      {/* This is a description and the footer */}
+      <div className={styles.description}>
+        <p>
+          👦👧 Talk about development with &nbsp;
+          <code className={styles.code}>developers</code>
+        </p>
+        <div>
+          <a
+            href="https://github.com/nardis9501"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            By{" "}
+            <Image
+              src="/naryuri_icon.jpg"
+              alt="NarYuri Logo"
+              className={styles.vercelLogo}
+              width={70}
+              height={70}
+              priority
+            />
+          </a>
         </div>
-      </AppLayout>
+      </div>
+
       <main className={styles.main}> </main>
+      <style jsx>{`
+        section {
+          padding-top: 6.5rem;
+        }
+        div {
+          padding: 0 1rem;
+        }
+      `}</style>
     </>
   )
 }

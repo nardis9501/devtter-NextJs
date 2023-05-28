@@ -13,7 +13,6 @@ export default function AppLayout({ children }) {
           position: relative;
           justify-content: space-between;
           align-items: center;
-          padding: 6rem;
           max-width: 725px;
           height: 100vh;
           overflow-y: auto;
@@ -26,9 +25,8 @@ export default function AppLayout({ children }) {
 
         @media (max-width: 725px) {
           main {
-            height: 100vh;
             width: 66%;
-            padding: 6rem;
+            height: 100vh;
           }
         }
       `}</style>

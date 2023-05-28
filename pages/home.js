@@ -1,12 +1,11 @@
-import AppLayout from "../components/AppLayout"
 import Devit from "../components/Devit"
 import { useEffect, useState } from "react"
 import useUser from "./hooks/useUser"
 import { fechtLatestDevits } from "../firebase/client"
 import Link from "next/link"
-import Create from "@/components/Icons/Create"
-import HomeIcon from "@/components/Icons/HomeIcon"
-import Search from "@/components/Icons/Search"
+import Create from "@/components/Icons/CreateSvgIcon"
+import HomeIcon from "@/components/Icons/HomeSvgIcon"
+import Search from "@/components/Icons/SearchSvgIcon"
 import Head from "next/head"
 
 export default function HomePage() {
@@ -17,47 +16,47 @@ export default function HomePage() {
   useEffect(() => {
     user && fechtLatestDevits().then(setTimeline)
   }, [user])
+
   return (
     <>
-      <AppLayout>
-        <Head>
-          <title>Home - Devits</title>
-        </Head>
-        <header>
-          <h2>Inicio</h2>
-        </header>
+      <Head>
+        <title>Home - Devits</title>
+      </Head>
+      <header>
+        <h2>Inicio</h2>
+      </header>
 
-        <section>
-          {timeline.map(({ id, userName, img, createdAt, avatar, content }) => (
-            <Devit
-              avatar={avatar}
-              id={id}
-              key={id}
-              img={img}
-              content={content}
-              userName={userName}
-              createdAt={createdAt}
-            />
-          ))}
-        </section>
-        <nav>
-          <Link href={"#"} passHref legacyBehavior>
-            <a>
-              <HomeIcon stroke="#09f" />
-            </a>
-          </Link>
-          <Link href={"#"} passHref legacyBehavior>
-            <a>
-              <Search stroke="#09f" />
-            </a>
-          </Link>
-          <Link href={"/compose/tweet"} passHref legacyBehavior>
-            <a>
-              <Create stroke="#09f" />
-            </a>
-          </Link>
-        </nav>
-      </AppLayout>
+      <section>
+        {timeline.map(({ id, userName, img, createdAt, avatar, content }) => (
+          <Devit
+            avatar={avatar}
+            id={id}
+            key={id}
+            img={img}
+            content={content}
+            userName={userName}
+            createdAt={createdAt}
+          />
+        ))}
+      </section>
+      <nav>
+        <Link href={"#"} passHref legacyBehavior>
+          <a>
+            <HomeIcon stroke="#09f" />
+          </a>
+        </Link>
+        <Link href={"#"} passHref legacyBehavior>
+          <a>
+            <Search stroke="#09f" />
+          </a>
+        </Link>
+        <Link href={"/compose/tweet"} passHref legacyBehavior>
+          <a>
+            <Create stroke="#09f" />
+          </a>
+        </Link>
+      </nav>
+
       <style jsx>{`
         header {
           border-bottom: 1px solid #ccc;
@@ -76,15 +75,11 @@ export default function HomePage() {
         }
 
         section {
-           {
-            /* display: flex;
-          flex-direction: column;
-          flex: 1; */
-          }
+          display: grid;
+          place-content: start;
+          place-items: center;
           width: 100%;
-           {
-            /* padding: 49px 0 49px 0; */
-          }
+          padding: 3rem 2rem 3rem 1rem;
         }
 
         nav {

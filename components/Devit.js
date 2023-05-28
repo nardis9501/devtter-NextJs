@@ -1,5 +1,7 @@
 import useTimeago from "@/pages/hooks/useTimeAgo"
 import Avatar from "./Avatar"
+import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function Devit({
   avatar,
@@ -10,19 +12,29 @@ export default function Devit({
   id,
 }) {
   const { timeAgo, titleTime } = useTimeago(createdAt)
-  console.log(timeAgo, titleTime)
+  const router = useRouter()
+  const handleClick = (e) => {
+    e.preventDefault()
+    router.push(`/status/${id}`)
+  }
+  const handleClickIsComing = (e) => {
+    // e.preventDefault()
+    router.push("/IsComing")
+  }
   return (
     <>
-      <article>
+      <article onClick={handleClick}>
         <div>
           <Avatar alt={userName} src={avatar} />
         </div>
         <section>
-          <strong>{userName}</strong>
+          <strong onClick={handleClickIsComing}>{userName}</strong>
 
           <span> · </span>
 
-          <time title={titleTime}>{timeAgo}</time>
+          <Link className="link" href={`/status/${id}`}>
+            <time title={titleTime}>{timeAgo}</time>
+          </Link>
 
           <p>{content}</p>
           {img && <img src={img} />}
@@ -32,10 +44,15 @@ export default function Devit({
         article {
           border-bottom: 1px solid #ccc;
           display: flex;
-
           padding: 15px 0 15px 0;
           width: 100%;
         }
+
+        article:hover {
+          background-color: #f5f8fa88;
+          cursor: pointer;
+        }
+
         section {
           display: block;
           flex: 1;
@@ -43,6 +60,10 @@ export default function Devit({
 
         div {
           padding: 1px;
+        }
+
+        strong:hover {
+          text-decoration: underline;
         }
         p {
           line-height: 1.3125;
@@ -53,7 +74,8 @@ export default function Devit({
           margin: 0 5px;
         }
         img {
-          width: 100%;
+          width: 90%;
+
           height: auto;
           border-radius: 15px;
           margin-top: 10px;
@@ -61,6 +83,10 @@ export default function Devit({
         time {
           color: #555;
           font-size: 14px;
+        }
+
+        time:hover {
+          text-decoration: underline;
         }
       `}</style>
     </>

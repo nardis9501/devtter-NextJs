@@ -33,3 +33,4 @@ yarn-error.log*
 
 #Eslint
 .elintcache
+firebase/devtter-f1bf5-firebase-admins-key.json
